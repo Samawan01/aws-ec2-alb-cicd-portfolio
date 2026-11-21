@@ -61,7 +61,11 @@ Active internet-facing ALB listener setup routing incoming HTTP port 80 traffic 
 
 ![AWS Application Load Balancer Configuration](./images/3-aws-alb-configuration.png)
 
-### 4. S3 Source Bucket Storage
-AWS S3 bucket deployment storing static application assets (`index.html`) used by automated shell scripts for backend code pulls.
+## 🚀 Automated S3 Artifact Deployment (`deploy.sh`)
+
+To eliminate manual SSH file edits across private subnet instances, a Bash deployment script pulls the latest static build from Amazon S3 (authenticated via an EC2 IAM Instance Profile) and cycles the HTTP listener on port 80:
+
+* **Artifact Pull:** Fetches `index.html` from `s3://sam-project-bucket-2026-xyz` via AWS CLI.
+* **Process Management:** Terminates existing port 80 listeners (`fuser -k 80/tcp`) and launches a background `nohup` Python HTTP daemon with persistent logging (`server.log`).
 
 ![AWS S3 Buckets Overview](./images/4-aws-s3-buckets.png)
